@@ -256,7 +256,7 @@ export default function App() {
               className="font-display text-3xl font-bold text-center uppercase tracking-tight mb-10"
               style={{ color: "oklch(0.15 0.01 30)" }}
             >
-              Why You're the Best!
+              Why You&apos;re the Best!
             </h2>
           </motion.div>
 
@@ -272,8 +272,8 @@ export default function App() {
                 style={{ color: "oklch(0.25 0.02 30)" }}
               >
                 There are no words big enough to describe how amazing you are.
-                You walk into a room and everything feels lighter. You're the
-                kind of person people write songs about, the kind that makes
+                You walk into a room and everything feels lighter. You&apos;re
+                the kind of person people write songs about, the kind that makes
                 life infinitely better just by being in it.
               </p>
               <ul className="space-y-3">
@@ -549,8 +549,8 @@ export default function App() {
             className="py-3 px-8 text-center text-xs"
             style={{ backgroundColor: "oklch(0.72 0.14 355)", color: "white" }}
           >
-            &copy; {new Date().getFullYear()} &nbsp;&bull;&nbsp; Built with love
-            using{" "}
+            Published by aadiiiii 💕 &nbsp;&bull;&nbsp; &copy;{" "}
+            {new Date().getFullYear()} &nbsp;&bull;&nbsp; Built with love using{" "}
             <a
               href={`https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(window.location.hostname)}`}
               target="_blank"
