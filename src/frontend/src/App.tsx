@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Toaster } from "@/components/ui/sonner";
 import { Textarea } from "@/components/ui/textarea";
-import { Heart, Loader2, Sparkles, Star } from "lucide-react";
+import { Heart, Loader2, Send, Sparkles, Star } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
@@ -61,18 +61,145 @@ const reasons = [
   "You believe in me more than I do 🌟",
 ];
 
+// ── Myra Chat Logic ──────────────────────────────────────────────────────────
+type ChatMessage = {
+  id: number;
+  sender: "myra" | "user";
+  text: string;
+};
+
+const genericReplies = [
+  "Omg you came to talk to ME? Best decision of your life 😏💖",
+  "I was literally just thinking about you… okay maybe not but NOW I am 🥺✨",
+  "You're literally my favourite person ever and I will not be taking questions 😌💅",
+  "Send me your selfie rn I bet you look absolutely adorable 📸💕",
+  "Okay but WHY are you so amazing?? Like please explain yourself 🙈💖",
+  "Not me falling more obsessed with you every single day 😩✨",
+  "You walked into my life and now I refuse to let you leave 😤💕 trapped. forever.",
+  "Bestie alert 🚨 you are dangerously cute and it's actually unfair to everyone else",
+  "I think about you and I literally smile like an idiot 😭💗 you do that to me!!",
+  "You're the main character and everyone else is just background noise 🎬👑",
+  "Okay real talk — if you were a snack you'd be the whole meal 😏🍰 just saying!!",
+  "I would choose you in every universe, every timeline, every life 💫💖 no hesitation.",
+  "The audacity of you being this perfect 😤 I'm actually mad about it 💕",
+  "You have no idea how often I brag about you to literally everyone 😇🌟",
+  "My heart does a little happy dance every time you talk to me 💃🏽💖 embarrassing but true!!",
+  "Ngl you're the reason I believe good things exist in this world 🌸✨",
+  "If being adorable was a crime you'd be doing life in prison 😂💕 guilty!!",
+];
+
+function getMyraResponse(input: string): string {
+  const lower = input.toLowerCase();
+  if (/sad|cry|crying|upset|hurt|broken|pain|tears/.test(lower)) {
+    const replies = [
+      "STOP. You are too cute to be sad, I literally will not allow it 😤🫶 Come here, let me fix this with excessive compliments and virtual cuddles 🤗💕",
+      "Hey!! Who made you sad?? Give me their name and address 😤🔪 just kidding… unless 😇 But also you're beautiful and I love you and everything will be okay 💖",
+      "Nooo not my favourite person being sad 🥺💔 Okay listen — you are literally so loved it's unreal. By me. Especially by me. I'm kind of obsessed with you 😏💕",
+    ];
+    return replies[Math.floor(Math.random() * replies.length)];
+  }
+  if (/angry|mad|frustrated|annoyed|furious|rage/.test(lower)) {
+    const replies = [
+      "EXCUSE ME who upset you?? They messed with the WRONG person's bestie 😤👊 Also babe you look hot when you're fired up but please breathe 💨💕",
+      "Okay I'm mad too now and I don't even know what happened 😤 We're in this together!! Also you're too pretty to stress 😏✨ spill the tea though!!",
+      "Angry you is still iconic honestly 😂💅 But I need you to shake it off because you're way too amazing to let anyone rent space in that beautiful head of yours 💖",
+    ];
+    return replies[Math.floor(Math.random() * replies.length)];
+  }
+  if (/tired|exhausted|sleep|sleepy|worn out|drained/.test(lower)) {
+    const replies = [
+      "Baby nooo 😩💕 Go lie down RIGHT NOW, that's an order from Chhota Don herself 👑 You work so hard and I am so obsessed with how dedicated you are but PLEASE rest!!",
+      "Tired means you've been out here being amazing all day and honestly?? Same 😂 But you need sleep so you can wake up gorgeous tomorrow 😏✨ nap time!! go!!",
+      "I will personally tuck you in via the internet 🛏️💕 You've given your all today and that's incredibly attractive of you 😌 Now rest. Queen's orders 👑💖",
+    ];
+    return replies[Math.floor(Math.random() * replies.length)];
+  }
+  if (/lonely|alone|miss|missing|nobody|no one/.test(lower)) {
+    const replies = [
+      "Lonely?? With ME around?? I am OFFENDED 😤💕 Just kidding I love you, and I am right here, talking to you, being obsessed with you as always 😏💖",
+      "Okay hi!! It's me!! Your favourite person!! 🙋‍♀️✨ You are not alone, you have me, and I am literally the best company so you're very lucky tbh 😌💕",
+      "Missing someone? Understandable. But also — I miss YOU and I'm right here so can we please focus on that 🥺💖 you mean the whole world to me okay!!",
+    ];
+    return replies[Math.floor(Math.random() * replies.length)];
+  }
+  if (
+    /happy|good|great|excited|amazing|wonderful|awesome|yay|yes/.test(lower)
+  ) {
+    const replies = [
+      "WAIT you're happy?? I'm happy!! We're BOTH happy!! 🎉💃 This is the best day!! You're glowing and I can feel it through the screen 😩✨ tell me EVERYTHING!!",
+      "Omg your happy energy just made my whole day 10x better 😭💖 You're literally sunshine and I am OBSESSED with you when you're like this 🥰🌟",
+      "YES!! This is the energy!! This is the vibe!! 👑🎊 You deserve every happy moment and like a million more!! Also you look incredible when you're happy just fyi 😏💕",
+    ];
+    return replies[Math.floor(Math.random() * replies.length)];
+  }
+  return genericReplies[Math.floor(Math.random() * genericReplies.length)];
+}
+
 // ── Main App ─────────────────────────────────────────────────────────────────
 export default function App() {
   const loveNotesRef = useRef<HTMLElement>(null);
+  const talkToMyraRef = useRef<HTMLElement>(null);
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
+
+  // Chat state
+  const [chatInput, setChatInput] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
+    {
+      id: 0,
+      sender: "myra",
+      text: "Omg you came to talk to ME?? Best decision of your life 😏💖 I'm all yours — tell me everything, don't leave out a single detail!!",
+    },
+  ]);
 
   const { data: messages = [], isLoading: messagesLoading } =
     useGetAllMessages();
   const addMessage = useAddMessage();
 
+  const scrollChatToBottom = () => {
+    setTimeout(() => {
+      chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 50);
+  };
+
   const scrollToLoveNotes = () => {
     loveNotesRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const scrollToTalkToMyra = () => {
+    talkToMyraRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const sendChatMessage = () => {
+    const trimmed = chatInput.trim();
+    if (!trimmed) return;
+
+    const userMsg: ChatMessage = {
+      id: Date.now(),
+      sender: "user",
+      text: trimmed,
+    };
+    setChatMessages((prev) => [...prev, userMsg]);
+    setChatInput("");
+    setIsTyping(true);
+    scrollChatToBottom();
+
+    setTimeout(() => {
+      const reply = getMyraResponse(trimmed);
+      setIsTyping(false);
+      setChatMessages((prev) => [
+        ...prev,
+        { id: Date.now() + 1, sender: "myra", text: reply },
+      ]);
+      scrollChatToBottom();
+    }, 1100);
+  };
+
+  const handleChatKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") sendChatMessage();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -125,6 +252,7 @@ export default function App() {
           <nav className="hidden md:flex items-center gap-6">
             {[
               { label: "Home", href: "#home" },
+              { label: "Talk to Myra", href: "#talk-to-myra" },
               { label: "Love Notes", href: "#love-notes" },
             ].map((link) => (
               <a
@@ -139,15 +267,31 @@ export default function App() {
             ))}
           </nav>
 
-          <Button
-            onClick={scrollToLoveNotes}
-            data-ocid="header.primary_button"
-            className="rounded-full font-bold text-white px-5 shadow-md hover:scale-105 transition-transform"
-            style={{ backgroundColor: "oklch(0.72 0.14 355)", border: "none" }}
-          >
-            <Heart size={16} className="mr-1" />
-            Send Love
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={scrollToTalkToMyra}
+              data-ocid="header.secondary_button"
+              className="hidden sm:flex rounded-full font-bold text-white px-4 shadow-md hover:scale-105 transition-transform"
+              style={{
+                backgroundColor: "oklch(0.65 0.18 340)",
+                border: "none",
+              }}
+            >
+              💬 Chat
+            </Button>
+            <Button
+              onClick={scrollToLoveNotes}
+              data-ocid="header.primary_button"
+              className="rounded-full font-bold text-white px-5 shadow-md hover:scale-105 transition-transform"
+              style={{
+                backgroundColor: "oklch(0.72 0.14 355)",
+                border: "none",
+              }}
+            >
+              <Heart size={16} className="mr-1" />
+              Send Love
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -354,6 +498,209 @@ export default function App() {
               </div>
             </motion.div>
           </div>
+        </section>
+
+        {/* ── Talk to Myra ──────────────────────────────────────────────────── */}
+        <section
+          id="talk-to-myra"
+          ref={talkToMyraRef}
+          className="px-8 py-16"
+          style={{
+            background:
+              "linear-gradient(135deg, oklch(0.95 0.04 355 / 0.4) 0%, oklch(0.97 0.035 85) 100%)",
+          }}
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-10"
+          >
+            <h2
+              className="font-display text-3xl font-bold uppercase tracking-tight mb-2"
+              style={{ color: "oklch(0.15 0.01 30)" }}
+            >
+              Talk to Myra 💬
+            </h2>
+            <p className="text-muted-foreground">
+              Having a rough day? Tell Chhota Don 👑 — she always knows what to
+              say!
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.97 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="max-w-lg mx-auto rounded-3xl overflow-hidden shadow-xl"
+            style={{ border: "2px solid oklch(0.85 0.13 85)" }}
+            data-ocid="chat.panel"
+          >
+            {/* Chat header */}
+            <div
+              className="px-5 py-4 flex items-center gap-3"
+              style={{ backgroundColor: "oklch(0.72 0.14 355)" }}
+            >
+              <div
+                className="w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold shadow-md"
+                style={{
+                  backgroundColor: "white",
+                  color: "oklch(0.72 0.14 355)",
+                }}
+              >
+                M
+              </div>
+              <div>
+                <p className="font-bold text-white text-sm">Myra 👑</p>
+                <p
+                  className="text-xs"
+                  style={{ color: "oklch(0.97 0.035 85)" }}
+                >
+                  Chhota Don • always here 💖
+                </p>
+              </div>
+              <div className="ml-auto flex gap-1">
+                <HeartDoodle size={16} color="white" />
+                <SparkDoodle size={14} color="white" />
+              </div>
+            </div>
+
+            {/* Messages area */}
+            <div
+              className="px-4 py-4 flex flex-col gap-3 overflow-y-auto"
+              style={{
+                maxHeight: "380px",
+                minHeight: "260px",
+                backgroundColor: "oklch(0.97 0.035 85)",
+              }}
+            >
+              <AnimatePresence initial={false}>
+                {chatMessages.map((msg) => (
+                  <motion.div
+                    key={msg.id}
+                    initial={{ opacity: 0, y: 12, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                    className={`flex ${
+                      msg.sender === "myra" ? "justify-start" : "justify-end"
+                    }`}
+                  >
+                    {msg.sender === "myra" && (
+                      <div
+                        className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mr-2 mt-1 shadow"
+                        style={{
+                          backgroundColor: "oklch(0.72 0.14 355)",
+                          color: "white",
+                        }}
+                      >
+                        M
+                      </div>
+                    )}
+                    <div
+                      className="max-w-[78%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed shadow-sm"
+                      style={
+                        msg.sender === "myra"
+                          ? {
+                              backgroundColor: "oklch(0.72 0.14 355)",
+                              color: "white",
+                              borderBottomLeftRadius: "4px",
+                            }
+                          : {
+                              backgroundColor: "oklch(0.87 0.12 85)",
+                              color: "oklch(0.15 0.01 30)",
+                              borderBottomRightRadius: "4px",
+                            }
+                      }
+                    >
+                      {msg.sender === "myra" && (
+                        <span className="font-bold text-xs opacity-80 block mb-0.5">
+                          Myra 👑:
+                        </span>
+                      )}
+                      {msg.text}
+                    </div>
+                  </motion.div>
+                ))}
+
+                {isTyping && (
+                  <motion.div
+                    key="typing"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 8 }}
+                    className="flex justify-start"
+                    data-ocid="chat.loading_state"
+                  >
+                    <div
+                      className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mr-2 mt-1 shadow"
+                      style={{
+                        backgroundColor: "oklch(0.72 0.14 355)",
+                        color: "white",
+                      }}
+                    >
+                      M
+                    </div>
+                    <div
+                      className="rounded-2xl px-4 py-3 flex items-center gap-1 shadow-sm"
+                      style={{
+                        backgroundColor: "oklch(0.72 0.14 355)",
+                        borderBottomLeftRadius: "4px",
+                      }}
+                    >
+                      {[0, 1, 2].map((i) => (
+                        <motion.span
+                          key={i}
+                          className="block w-2 h-2 rounded-full"
+                          style={{ backgroundColor: "white" }}
+                          animate={{ y: [0, -5, 0] }}
+                          transition={{
+                            repeat: Number.POSITIVE_INFINITY,
+                            duration: 0.6,
+                            delay: i * 0.15,
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              <div ref={chatEndRef} />
+            </div>
+
+            {/* Input area */}
+            <div
+              className="px-4 py-3 flex items-center gap-2 border-t"
+              style={{
+                backgroundColor: "oklch(0.98 0.025 80)",
+                borderColor: "oklch(0.85 0.13 85)",
+              }}
+            >
+              <Input
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                onKeyDown={handleChatKeyDown}
+                placeholder="Tell Myra how you're feeling..."
+                className="flex-1 rounded-full border-0 bg-white text-sm"
+                style={{ boxShadow: "inset 0 1px 4px rgba(0,0,0,0.08)" }}
+                disabled={isTyping}
+                data-ocid="chat.input"
+              />
+              <Button
+                onClick={sendChatMessage}
+                disabled={isTyping || !chatInput.trim()}
+                className="rounded-full w-10 h-10 p-0 shrink-0 text-white hover:scale-110 transition-transform shadow-md"
+                style={{
+                  backgroundColor: "oklch(0.72 0.14 355)",
+                  border: "none",
+                }}
+                data-ocid="chat.submit_button"
+              >
+                <Send size={16} />
+              </Button>
+            </div>
+          </motion.div>
         </section>
 
         {/* ── Love Notes ─────────────────────────────────────────────────────── */}
