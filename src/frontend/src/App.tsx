@@ -52,55 +52,6 @@ const WavySeparator = ({ bottomColor = "#FFF4DC" }) => (
 );
 
 // ── Data ─────────────────────────────────────────────────────────────────────
-const memories = [
-  {
-    caption: "Beach Day 🏖️",
-    gradient: "linear-gradient(135deg, #f6c6b0 0%, #f9a86e 100%)",
-    rotation: "-2deg",
-  },
-  {
-    caption: "Late Night Talks 🌙",
-    gradient: "linear-gradient(135deg, #c9b8f0 0%, #8e7cc3 100%)",
-    rotation: "1.5deg",
-  },
-  {
-    caption: "Laughing Till We Cry 😂",
-    gradient: "linear-gradient(135deg, #b5f0c9 0%, #5ec987 100%)",
-    rotation: "-1deg",
-  },
-  {
-    caption: "Road Trip Vibes 🚗",
-    gradient: "linear-gradient(135deg, #f0d5b5 0%, #e8a84e 100%)",
-    rotation: "2.5deg",
-  },
-  {
-    caption: "Coffee Dates ☕",
-    gradient: "linear-gradient(135deg, #f5c3a8 0%, #d4845a 100%)",
-    rotation: "-1.5deg",
-  },
-  {
-    caption: "Always There For Me 🤗",
-    gradient: "linear-gradient(135deg, #f0b5d5 0%, #e870a8 100%)",
-    rotation: "1deg",
-  },
-];
-
-const quotes = [
-  {
-    text: "A good friend knows all your best stories. A best friend has lived them with you.",
-    author: "Unknown",
-  },
-  {
-    text: "Friendship is born at the moment when one person says to another, 'What! You too?'",
-    author: "C.S. Lewis",
-  },
-  {
-    text: "A best friend is someone who loves you when you forget to love yourself.",
-    author: "Unknown",
-  },
-  { text: "True friendship is never serene.", author: "Marquise de Sévigné" },
-];
-
 const reasons = [
   "You always know what to say 💬",
   "Your laugh is literally contagious 😂",
@@ -174,8 +125,6 @@ export default function App() {
           <nav className="hidden md:flex items-center gap-6">
             {[
               { label: "Home", href: "#home" },
-              { label: "Memories", href: "#memories" },
-              { label: "Quotes", href: "#quotes" },
               { label: "Love Notes", href: "#love-notes" },
             ].map((link) => (
               <a
@@ -272,7 +221,7 @@ export default function App() {
                 textShadow: "0 2px 12px rgba(0,0,0,0.2)",
               }}
             >
-              For My Absolute Bestie!
+              For My Bestie Myra!
             </h1>
             <p
               className="text-xl md:text-2xl font-semibold mt-3"
@@ -281,7 +230,7 @@ export default function App() {
                 textShadow: "0 1px 6px rgba(0,0,0,0.15)",
               }}
             >
-              You mean the world to me 💖
+              Chhota Don 👑
             </p>
             <p
               className="mt-4 text-base max-w-lg mx-auto"
@@ -294,68 +243,6 @@ export default function App() {
         </section>
 
         <WavySeparator bottomColor="oklch(0.97 0.035 85)" />
-
-        {/* ── Memories & Adventures ─────────────────────────────────────────── */}
-        <section id="memories" className="px-8 py-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2
-              className="font-display text-3xl font-bold text-center uppercase tracking-tight mb-2"
-              style={{ color: "oklch(0.15 0.01 30)" }}
-            >
-              Memories &amp; Adventures
-            </h2>
-            <p className="text-center text-muted-foreground mb-10">
-              Every moment with you is a treasure 📸
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
-            {memories.map((mem, i) => (
-              <motion.div
-                key={mem.caption}
-                data-ocid={`memories.item.${i + 1}`}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-                whileHover={{ scale: 1.04, rotate: 0 }}
-                style={{ transform: `rotate(${mem.rotation})` }}
-                className="polaroid cursor-pointer transition-shadow hover:shadow-2xl"
-              >
-                <div
-                  className="w-full h-36 rounded-sm"
-                  style={{ background: mem.gradient }}
-                />
-                <p
-                  className="text-center text-sm font-semibold mt-2"
-                  style={{ color: "oklch(0.3 0.02 30)" }}
-                >
-                  {mem.caption}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-
-        {/* accent strip */}
-        <div style={{ background: "oklch(0.97 0.035 85)" }}>
-          <svg
-            viewBox="0 0 1440 60"
-            preserveAspectRatio="none"
-            style={{ display: "block", width: "100%", height: 50 }}
-            aria-hidden="true"
-          >
-            <path
-              d="M0,20 C360,60 720,0 1080,30 C1260,45 1380,10 1440,20 L1440,60 L0,60 Z"
-              fill="oklch(0.85 0.13 85 / 0.4)"
-            />
-          </svg>
-        </div>
 
         {/* ── Why You're the Best ───────────────────────────────────────────── */}
         <section className="px-8 py-16">
@@ -466,63 +353,6 @@ export default function App() {
                 </p>
               </div>
             </motion.div>
-          </div>
-        </section>
-
-        {/* ── Best Friend Quotes ─────────────────────────────────────────────── */}
-        <section
-          id="quotes"
-          className="px-8 py-16"
-          style={{ background: "oklch(0.85 0.13 85 / 0.3)" }}
-        >
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2
-              className="font-display text-3xl font-bold text-center uppercase tracking-tight mb-10"
-              style={{ color: "oklch(0.15 0.01 30)" }}
-            >
-              Best Friend Quotes
-            </h2>
-          </motion.div>
-
-          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-5">
-            {quotes.map((q, i) => (
-              <motion.div
-                key={q.author + q.text.slice(0, 10)}
-                data-ocid={`quotes.item.${i + 1}`}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.5 }}
-                className="rounded-2xl p-5 text-center"
-                style={{
-                  backgroundColor: "oklch(0.98 0.025 80)",
-                  boxShadow: "0 8px 30px rgba(0,0,0,0.1)",
-                }}
-              >
-                <SparkDoodle
-                  size={20}
-                  color="#F5C24F"
-                  className="mx-auto mb-3"
-                />
-                <p
-                  className="text-xs leading-relaxed italic mb-3"
-                  style={{ color: "oklch(0.3 0.02 30)" }}
-                >
-                  &ldquo;{q.text}&rdquo;
-                </p>
-                <p
-                  className="text-xs font-bold"
-                  style={{ color: "oklch(0.65 0.19 355)" }}
-                >
-                  &mdash; {q.author}
-                </p>
-              </motion.div>
-            ))}
           </div>
         </section>
 
@@ -701,7 +531,7 @@ export default function App() {
                   className="font-script text-2xl font-bold mb-1"
                   style={{ color: "oklch(0.15 0.01 30)" }}
                 >
-                  Made with 💖 for the best person in the world
+                  Made with 💖 for Myra — Chhota Don
                 </p>
                 <p className="text-sm" style={{ color: "oklch(0.25 0.02 30)" }}>
                   Here&rsquo;s to every laugh, every memory, every moment ✨
