@@ -1,0 +1,119 @@
+@import url("https://fonts.googleapis.com/css2?family=Pacifico&family=Dancing+Script:wght@600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Fraunces";
+  src: url("/assets/fonts/Fraunces.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Figtree";
+  src: url("/assets/fonts/Figtree.woff2") format("woff2");
+  font-weight: 300 900;
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    --radius: 1rem;
+
+    /* Warm Scrapbook Palette */
+    --background: 0.97 0.035 85; /* warm cream #FFF4DC */
+    --foreground: 0.15 0.01 30; /* near-black */
+    --card: 0.98 0.02 80; /* slightly lighter cream */
+    --card-foreground: 0.15 0.01 30;
+    --popover: 0.98 0.02 80;
+    --popover-foreground: 0.15 0.01 30;
+
+    --primary: 0.72 0.14 355; /* soft pink #F3A0B5 */
+    --primary-foreground: 1 0 0;
+
+    --secondary: 0.85 0.13 85; /* mustard #F7D26B */
+    --secondary-foreground: 0.15 0.01 30;
+
+    --muted: 0.93 0.04 80;
+    --muted-foreground: 0.45 0.02 30;
+
+    --accent: 0.78 0.14 65; /* golden orange #F5B24A */
+    --accent-foreground: 0.15 0.01 30;
+
+    --destructive: 0.577 0.245 27.325;
+    --destructive-foreground: 0.985 0 0;
+
+    --border: 0.88 0.06 75;
+    --input: 0.9 0.05 75;
+    --ring: 0.72 0.14 355;
+
+    /* Custom tokens */
+    --peach: 0.82 0.09 45;
+    --mustard: 0.85 0.13 85;
+    --pink-heart: 0.65 0.19 355;
+    --yellow-heart: 0.83 0.15 80;
+    --golden: 0.78 0.14 65;
+
+    /* shadcn charts */
+    --chart-1: 0.646 0.222 41.116;
+    --chart-2: 0.6 0.118 184.704;
+    --chart-3: 0.398 0.07 227.392;
+    --chart-4: 0.828 0.189 84.429;
+    --chart-5: 0.769 0.188 70.08;
+
+    --sidebar: 0.985 0 0;
+    --sidebar-foreground: 0.145 0 0;
+    --sidebar-primary: 0.205 0 0;
+    --sidebar-primary-foreground: 0.985 0 0;
+    --sidebar-accent: 0.97 0 0;
+    --sidebar-accent-foreground: 0.205 0 0;
+    --sidebar-border: 0.922 0 0;
+    --sidebar-ring: 0.708 0 0;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Figtree", sans-serif;
+    background: linear-gradient(
+      135deg,
+      oklch(0.82 0.09 45) 0%,
+      oklch(0.87 0.12 85) 100%
+    );
+    min-height: 100vh;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: "Fraunces", serif;
+  }
+  .font-script {
+    font-family: "Dancing Script", cursive;
+  }
+  .polaroid {
+    background: white;
+    padding: 12px 12px 40px 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 0 1px 4px rgba(0, 0, 0, 0.1);
+  }
+  .wavy-bottom {
+    position: relative;
+  }
+  .wavy-bottom::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 60px;
+  }
+}
